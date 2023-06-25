@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7a8ea125cb0e48f39e83fa7afd081c56" Name="Diagram1">
+        <EntityTypeShape EntityType="SurveyFormDbModel.Question" Width="1.5" PointX="5.25" PointY="1.25" />
+        <EntityTypeShape EntityType="SurveyFormDbModel.Survey" Width="1.5" PointX="5.375" PointY="4.375" />
+        <EntityTypeShape EntityType="SurveyFormDbModel.TemplateQuestion" Width="1.5" PointX="1.625" PointY="1" />
+        <EntityTypeShape EntityType="SurveyFormDbModel.Template" Width="1.5" PointX="1.875" PointY="4.375" />
+        <AssociationConnector Association="SurveyFormDbModel.FK_TemplateQuestions_Questions" />
+        <AssociationConnector Association="SurveyFormDbModel.FK_Surveys_Templates" />
+        <AssociationConnector Association="SurveyFormDbModel.FK_TemplateQuestions_Templates" />
+        <EntityTypeShape EntityType="SurveyFormDbModel.ResponseAnswer" Width="1.5" PointX="9.25" PointY="1.25" />
+        <EntityTypeShape EntityType="SurveyFormDbModel.SurveyRespons" Width="1.5" PointX="9.25" PointY="4.25" />
+        <AssociationConnector Association="SurveyFormDbModel.FK_ResponseAnswers_Questions" />
+        <AssociationConnector Association="SurveyFormDbModel.FK_ResponseAnswers_SurveyResponses" />
+        <AssociationConnector Association="SurveyFormDbModel.FK_SurveyResponses_Surveys" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

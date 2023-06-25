@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SurveyFormDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Questions">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Question" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="QuestionType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MetaData" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ResponseAnswers">
+          <Key>
+            <PropertyRef Name="AnswerId" />
+          </Key>
+          <Property Name="AnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResponseId" Type="int" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="Answer" Type="nvarchar" MaxLength="512" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SurveyResponses">
+          <Key>
+            <PropertyRef Name="ResponseId" />
+          </Key>
+          <Property Name="ResponseId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SurveyId" Type="int" Nullable="false" />
+          <Property Name="FromIp" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="DateSubmitted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Surveys">
+          <Key>
+            <PropertyRef Name="SurveyId" />
+          </Key>
+          <Property Name="SurveyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FormGuid" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="512" />
+          <Property Name="TemplateId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TemplateQuestions">
+          <Key>
+            <PropertyRef Name="TemplateQuestionId" />
+          </Key>
+          <Property Name="TemplateQuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateId" Type="int" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Templates">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="512" />
+        </EntityType>
+        <Association Name="FK_ResponseAnswers_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="ResponseAnswers" Type="Self.ResponseAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="ResponseAnswers">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResponseAnswers_SurveyResponses">
+          <End Role="SurveyResponses" Type="Self.SurveyResponses" Multiplicity="1" />
+          <End Role="ResponseAnswers" Type="Self.ResponseAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyResponses">
+              <PropertyRef Name="ResponseId" />
+            </Principal>
+            <Dependent Role="ResponseAnswers">
+              <PropertyRef Name="ResponseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyResponses_Surveys">
+          <End Role="Surveys" Type="Self.Surveys" Multiplicity="1" />
+          <End Role="SurveyResponses" Type="Self.SurveyResponses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Surveys">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="SurveyResponses">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Surveys_Templates">
+          <End Role="Templates" Type="Self.Templates" Multiplicity="1" />
+          <End Role="Surveys" Type="Self.Surveys" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Templates">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="Surveys">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateQuestions_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="TemplateQuestions" Type="Self.TemplateQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="TemplateQuestions">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateQuestions_Templates">
+          <End Role="Templates" Type="Self.Templates" Multiplicity="1" />
+          <End Role="TemplateQuestions" Type="Self.TemplateQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Templates">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="TemplateQuestions">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SurveyFormDbModelStoreContainer">
+          <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResponseAnswers" EntityType="Self.ResponseAnswers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveyResponses" EntityType="Self.SurveyResponses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Surveys" EntityType="Self.Surveys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TemplateQuestions" EntityType="Self.TemplateQuestions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ResponseAnswers_Questions" Association="Self.FK_ResponseAnswers_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="ResponseAnswers" EntitySet="ResponseAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResponseAnswers_SurveyResponses" Association="Self.FK_ResponseAnswers_SurveyResponses">
+            <End Role="SurveyResponses" EntitySet="SurveyResponses" />
+            <End Role="ResponseAnswers" EntitySet="ResponseAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyResponses_Surveys" Association="Self.FK_SurveyResponses_Surveys">
+            <End Role="Surveys" EntitySet="Surveys" />
+            <End Role="SurveyResponses" EntitySet="SurveyResponses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Surveys_Templates" Association="Self.FK_Surveys_Templates">
+            <End Role="Templates" EntitySet="Templates" />
+            <End Role="Surveys" EntitySet="Surveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateQuestions_Questions" Association="Self.FK_TemplateQuestions_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="TemplateQuestions" EntitySet="TemplateQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateQuestions_Templates" Association="Self.FK_TemplateQuestions_Templates">
+            <End Role="Templates" EntitySet="Templates" />
+            <End Role="TemplateQuestions" EntitySet="TemplateQuestions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SurveyFormDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SurveyFormDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Questions" EntityType="SurveyFormDbModel.Question" />
+          <EntitySet Name="Surveys" EntityType="SurveyFormDbModel.Survey" />
+          <EntitySet Name="TemplateQuestions" EntityType="SurveyFormDbModel.TemplateQuestion" />
+          <EntitySet Name="Templates" EntityType="SurveyFormDbModel.Template" />
+          <AssociationSet Name="FK_TemplateQuestions_Questions" Association="SurveyFormDbModel.FK_TemplateQuestions_Questions">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="TemplateQuestion" EntitySet="TemplateQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Surveys_Templates" Association="SurveyFormDbModel.FK_Surveys_Templates">
+            <End Role="Template" EntitySet="Templates" />
+            <End Role="Survey" EntitySet="Surveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateQuestions_Templates" Association="SurveyFormDbModel.FK_TemplateQuestions_Templates">
+            <End Role="Template" EntitySet="Templates" />
+            <End Role="TemplateQuestion" EntitySet="TemplateQuestions" />
+          </AssociationSet>
+          <EntitySet Name="ResponseAnswers" EntityType="SurveyFormDbModel.ResponseAnswer" />
+          <EntitySet Name="SurveyResponses" EntityType="SurveyFormDbModel.SurveyRespons" />
+          <AssociationSet Name="FK_ResponseAnswers_Questions" Association="SurveyFormDbModel.FK_ResponseAnswers_Questions">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="ResponseAnswer" EntitySet="ResponseAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResponseAnswers_SurveyResponses" Association="SurveyFormDbModel.FK_ResponseAnswers_SurveyResponses">
+            <End Role="SurveyRespons" EntitySet="SurveyResponses" />
+            <End Role="ResponseAnswer" EntitySet="ResponseAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SurveyResponses_Surveys" Association="SurveyFormDbModel.FK_SurveyResponses_Surveys">
+            <End Role="Survey" EntitySet="Surveys" />
+            <End Role="SurveyRespons" EntitySet="SurveyResponses" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Question1" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="QuestionType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MetaData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TemplateQuestions" Relationship="SurveyFormDbModel.FK_TemplateQuestions_Questions" FromRole="Question" ToRole="TemplateQuestion" />
+          <NavigationProperty Name="ResponseAnswers" Relationship="SurveyFormDbModel.FK_ResponseAnswers_Questions" FromRole="Question" ToRole="ResponseAnswer" />
+        </EntityType>
+        <EntityType Name="Survey">
+          <Key>
+            <PropertyRef Name="SurveyId" />
+          </Key>
+          <Property Name="SurveyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="TemplateId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Template" Relationship="SurveyFormDbModel.FK_Surveys_Templates" FromRole="Survey" ToRole="Template" />
+          <Property Name="FormGuid" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SurveyResponses" Relationship="SurveyFormDbModel.FK_SurveyResponses_Surveys" FromRole="Survey" ToRole="SurveyRespons" />
+        </EntityType>
+        <EntityType Name="TemplateQuestion">
+          <Key>
+            <PropertyRef Name="TemplateQuestionId" />
+          </Key>
+          <Property Name="TemplateQuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="SurveyFormDbModel.FK_TemplateQuestions_Questions" FromRole="TemplateQuestion" ToRole="Question" />
+          <NavigationProperty Name="Template" Relationship="SurveyFormDbModel.FK_TemplateQuestions_Templates" FromRole="TemplateQuestion" ToRole="Template" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Surveys" Relationship="SurveyFormDbModel.FK_Surveys_Templates" FromRole="Template" ToRole="Survey" />
+          <NavigationProperty Name="TemplateQuestions" Relationship="SurveyFormDbModel.FK_TemplateQuestions_Templates" FromRole="Template" ToRole="TemplateQuestion" />
+        </EntityType>
+        <Association Name="FK_TemplateQuestions_Questions">
+          <End Type="SurveyFormDbModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="SurveyFormDbModel.TemplateQuestion" Role="TemplateQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="TemplateQuestion">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Surveys_Templates">
+          <End Type="SurveyFormDbModel.Template" Role="Template" Multiplicity="1" />
+          <End Type="SurveyFormDbModel.Survey" Role="Survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="Survey">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateQuestions_Templates">
+          <End Type="SurveyFormDbModel.Template" Role="Template" Multiplicity="1" />
+          <End Type="SurveyFormDbModel.TemplateQuestion" Role="TemplateQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="TemplateQuestion">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ResponseAnswer">
+          <Key>
+            <PropertyRef Name="AnswerId" />
+          </Key>
+          <Property Name="AnswerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResponseId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="Answer" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Question" Relationship="SurveyFormDbModel.FK_ResponseAnswers_Questions" FromRole="ResponseAnswer" ToRole="Question" />
+          <NavigationProperty Name="SurveyRespons" Relationship="SurveyFormDbModel.FK_ResponseAnswers_SurveyResponses" FromRole="ResponseAnswer" ToRole="SurveyRespons" />
+        </EntityType>
+        <EntityType Name="SurveyRespons">
+          <Key>
+            <PropertyRef Name="ResponseId" />
+          </Key>
+          <Property Name="ResponseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SurveyId" Type="Int32" Nullable="false" />
+          <Property Name="FromIp" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="DateSubmitted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ResponseAnswers" Relationship="SurveyFormDbModel.FK_ResponseAnswers_SurveyResponses" FromRole="SurveyRespons" ToRole="ResponseAnswer" />
+          <NavigationProperty Name="Survey" Relationship="SurveyFormDbModel.FK_SurveyResponses_Surveys" FromRole="SurveyRespons" ToRole="Survey" />
+        </EntityType>
+        <Association Name="FK_ResponseAnswers_Questions">
+          <End Type="SurveyFormDbModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="SurveyFormDbModel.ResponseAnswer" Role="ResponseAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="ResponseAnswer">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResponseAnswers_SurveyResponses">
+          <End Type="SurveyFormDbModel.SurveyRespons" Role="SurveyRespons" Multiplicity="1" />
+          <End Type="SurveyFormDbModel.ResponseAnswer" Role="ResponseAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyRespons">
+              <PropertyRef Name="ResponseId" />
+            </Principal>
+            <Dependent Role="ResponseAnswer">
+              <PropertyRef Name="ResponseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SurveyResponses_Surveys">
+          <End Type="SurveyFormDbModel.Survey" Role="Survey" Multiplicity="1" />
+          <End Type="SurveyFormDbModel.SurveyRespons" Role="SurveyRespons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Survey">
+              <PropertyRef Name="SurveyId" />
+            </Principal>
+            <Dependent Role="SurveyRespons">
+              <PropertyRef Name="SurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SurveyFormDbModelStoreContainer" CdmEntityContainer="SurveyFormDbEntities">
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="SurveyFormDbModel.Question">
+              <MappingFragment StoreEntitySet="Questions">
+                <ScalarProperty Name="MetaData" ColumnName="MetaData" />
+                <ScalarProperty Name="QuestionType" ColumnName="QuestionType" />
+                <ScalarProperty Name="Question1" ColumnName="Question" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Surveys">
+            <EntityTypeMapping TypeName="SurveyFormDbModel.Survey">
+              <MappingFragment StoreEntitySet="Surveys">
+                <ScalarProperty Name="FormGuid" ColumnName="FormGuid" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TemplateQuestions">
+            <EntityTypeMapping TypeName="SurveyFormDbModel.TemplateQuestion">
+              <MappingFragment StoreEntitySet="TemplateQuestions">
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="TemplateQuestionId" ColumnName="TemplateQuestionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Templates">
+            <EntityTypeMapping TypeName="SurveyFormDbModel.Template">
+              <MappingFragment StoreEntitySet="Templates">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResponseAnswers">
+            <EntityTypeMapping TypeName="SurveyFormDbModel.ResponseAnswer">
+              <MappingFragment StoreEntitySet="ResponseAnswers">
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="ResponseId" ColumnName="ResponseId" />
+                <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveyResponses">
+            <EntityTypeMapping TypeName="SurveyFormDbModel.SurveyRespons">
+              <MappingFragment StoreEntitySet="SurveyResponses">
+                <ScalarProperty Name="DateSubmitted" ColumnName="DateSubmitted" />
+                <ScalarProperty Name="FromIp" ColumnName="FromIp" />
+                <ScalarProperty Name="SurveyId" ColumnName="SurveyId" />
+                <ScalarProperty Name="ResponseId" ColumnName="ResponseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

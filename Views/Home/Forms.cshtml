@@ -1,0 +1,61 @@
+﻿@model IEnumerable<SurveyForm.Data.Survey>
+
+@{
+    ViewBag.Title = "Forms";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Forms</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateForm")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DisplayName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            Template
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href="~/Home/TemplateDetail?templateId=@item.TemplateId">@item.Template.DisplayName</a>
+            </td>
+            <td>
+                <a href="#" onclick="copyLinkToClipboard('@item.FormGuid')">Copy Link</a> |
+                @Html.ActionLink("Delete", "DeleteForm", new { surveyId = item.SurveyId })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script>
+    function copyLinkToClipboard(formGuid) {
+
+        let linkToCopy = window.location.origin + "/Home/Survey?q=" + formGuid;
+
+        let $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(linkToCopy).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        window.location.href = window.location.origin + "/Home/Forms?msg=Link%20copied%20to%20clipboard%20sucessfully.";
+    }
+</script>

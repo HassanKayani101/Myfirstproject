@@ -1,0 +1,109 @@
+﻿@model SurveyForm.Data.Survey
+
+@{
+    Layout = null;
+
+    var alreadySubmitted = (bool)ViewBag.AlreadySubmitted;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="container body-content">
+
+        @if (!string.IsNullOrEmpty(@ViewBag.Msg))
+        {
+            <div class="alert alert-info alert-dismissable custom-alert" style="margin-top:10px" role="alert">
+                @ViewBag.Msg
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        else if (alreadySubmitted)
+        {
+            <div class="alert alert-success" style="margin-top:10px" role="alert">
+                Response already submitted.
+            </div>
+        }
+
+        <h2>Survey</h2>
+
+        <div>
+            <h4>@*Survey*@</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    Title
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DisplayName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+            </dl>
+        </div>
+
+        @if (!alreadySubmitted)
+        {
+
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(a => a.SurveyId)
+                @Html.HiddenFor(a => a.FormGuid)
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Template.TemplateQuestions)
+                        {
+                            var namePostfix = Guid.NewGuid();
+
+                            @Html.Hidden("Question_" + namePostfix, item.QuestionId)
+
+                            <tr>
+                                <td>@item.Question.Question1</td>
+                                <td>
+                                    <input type="text" name="Answer_@namePostfix" class="form-control" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-default" />
+                </div>
+
+            }
+        }
+
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

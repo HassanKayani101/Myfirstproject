@@ -1,0 +1,39 @@
+﻿@model IEnumerable<SurveyForm.Data.Question>
+
+@{
+    ViewBag.Title = "Questions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Questions</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateQuestion")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Question1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionType)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Question1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionType)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { questionId = item.QuestionId })
+            </td>
+        </tr>
+    }
+
+</table>
